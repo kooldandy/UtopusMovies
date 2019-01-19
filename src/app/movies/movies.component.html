@@ -1,0 +1,88 @@
+<div class="viewtype">
+    <div>
+        <label>Type of view:</label>
+        <label class="switch" style="top:19px; left: 10px">
+            <input type="checkbox" (click)="view($event)">
+            <span class="slider round"><i style="font-size:10px; margin-left: 3px;">Grid</i>&nbsp;
+                <i style="font-size:10px;margin-left: 10px;">List</i></span>
+        </label>
+    </div>
+    <div>
+        <label>Theme: </label>
+        <label class="switch" style="top:19px; left: 10px">
+            <input type="checkbox" (click)="theme($event)">
+            <span class="slider round"><i style="font-size:10px; margin-left: 3px;">Light</i>&nbsp;<i style="font-size:10px;">Dark</i></span>
+        </label>
+    </div>
+    <div style="display:inline-flex; margin-top: 6px;">
+        <label>Items/page: </label>
+        <select id = "itemperpage" class="form-control" style="width:30%;" (change)="paging($event.target.value)">
+            <option *ngFor="let n of numOfItems" value={{n}}>{{n}}</option>
+        </select>
+    </div>
+</div>
+
+<div class="main">
+
+    <div class="filter">
+        <form class="filter-form form-group">
+            <h4>Search:</h4>
+            <input type="text" class="form-control" list="browsers" #moviename /><br />
+
+            <datalist id="browsers" [hidden]="isAutoComp">
+                <option *ngFor="let l of dataListArr" value={{l}}>{{l}}</option>
+            </datalist>
+
+
+            <button class="btn btn-primary btn-sm" (click)="search(moviename)">Search</button><span> &nbsp;</span>
+            <button class="btn btn-primary btn-sm" (click)="reset()">reset</button>
+        </form>
+        <form class="filter-form form-group">
+            <h4>Sort By:</h4>
+            <select id="sort" class="form-control" (change)="sorting($event.target.value)">
+                <option *ngFor="let l of _sortOptionArr" value={{l.option}}>{{l.text}}</option>
+            </select>
+
+        </form>
+        <form class="filter-form form-group">
+            <h4>Filter:</h4>
+            <span>Year:</span>
+            <select id="filteryr" class="form-control" (change)="filter()">
+                <option *ngFor="let y of _movieYearsArr" value={{y}}>{{y}}</option>
+            </select>
+            <br />
+            <span>Language:</span>
+            <select id="filterlang" class="form-control" (change)="filter()">
+                <option *ngFor="let l of _movieLangArr" value={{l}}>{{l}}</option>
+            </select>
+            <br />
+            <span>Country:</span>
+            <select id="filtercont" class="form-control" (change)="filter()">
+                <option *ngFor="let l of _movieCountry" value={{l}}>{{l}}</option>
+            </select>
+            <br />
+            <span>Genre:</span>
+            <select id="filtergen" class="form-control" (change)="filter()">
+                <option *ngFor="let l of _movieGenreArr" value={{l}}>{{l}}</option>
+            </select>
+
+        </form>
+    </div>
+    <div style="width:70%;">
+
+        <div class="timeline">
+            <div *ngIf="isLoading">
+                <img src="https://www.knog.com.au/media/vss_spinandwin/Loader.gif" />
+            </div>
+            <div *ngIf="!isLoading">
+                    <app-moviegrid *ngIf="isMovieGrid" [moviesArray]="moviesArray" [itemsPerPage]="itemsPerPage" [p]="p"></app-moviegrid>
+                    <app-movielist *ngIf="!isMovieGrid" [moviesArray]="moviesArray" [itemsPerPage]="itemsPerPage" [p]="p"></app-movielist>        
+            </div>
+            
+        </div>
+        <div class="pagination">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+    </div>
+
+</div>
